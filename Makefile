@@ -23,7 +23,14 @@ install_argocd: k8s_connect
 	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 	kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 
-.PHONY: port_forward
+# install argocd rollouts following instructions here - https://argoproj.github.io/argo-rollouts/installation/#controller-installation
+# tweaked for this issue - https://github.com/argoproj/argo-rollouts/issues/1386
+.PHONY: install_argocd_rollouts
+install_argocd_rollouts: k8s_connect
+	kubectl create namespace argo-rollouts
+	kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/v1.0.2/download/install.yaml
+
+PHONY: port_forward
 port_forward: k8s_connect
 	kubectl port-forward svc/argocd-server -n argocd 8080:443
 
