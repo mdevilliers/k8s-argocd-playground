@@ -28,7 +28,7 @@ install_argocd: k8s_connect
 .PHONY: install_argocd_rollouts
 install_argocd_rollouts: k8s_connect
 	kubectl create namespace argo-rollouts
-	kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/v1.0.2/download/install.yaml
+	kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
 
 PHONY: port_forward
 port_forward: k8s_connect
