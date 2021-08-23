@@ -23,10 +23,25 @@ install_argocd: k8s_connect
 	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 	kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 
-.PHONY: port_forward
-port_forward: k8s_connect
+PHONY: argocd_port_forward
+argocd_port_forward: k8s_connect
 	kubectl port-forward svc/argocd-server -n argocd 8080:443
 
-.PHONY: get_admin_password
-get_admin_password: k8s_connect
+.PHONY: argocd_admin_password
+argocd_get_admin_password: k8s_connect
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
+
+# install argocd rollouts following instructions here - https://argoproj.github.io/argo-rollouts/installation/#controller-installation
+# tweaked for this issue - https://github.com/argoproj/argo-rollouts/issues/1386
+.PHONY: install_argocd_rollouts
+install_argocd_rollouts: k8s_connect
+	kubectl create namespace argo-rollouts
+	kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+
+.PHONY: argocd_rollout_dashboard
+argocd_rollout_dashboard: k8s_connect
+	kubectl argo rollouts dashboard
+
+.PHONY: install_guestbook
+install_guestbook:
+	helm install -f ./helm/guestbook/values.yaml my-guestbook ./helm/guestbook
