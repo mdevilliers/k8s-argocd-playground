@@ -32,7 +32,6 @@ argocd_get_admin_password: k8s_connect
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
 
 # install argocd rollouts following instructions here - https://argoproj.github.io/argo-rollouts/installation/#controller-installation
-# tweaked for this issue - https://github.com/argoproj/argo-rollouts/issues/1386
 .PHONY: install_argocd_rollouts
 install_argocd_rollouts: k8s_connect
 	kubectl create namespace argo-rollouts
