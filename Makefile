@@ -43,6 +43,9 @@ install_argocd_rollouts: k8s_connect
 install_argocd_workflow: k8s_connect
 	kubectl create namespace argo
 	kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo-workflows/master/manifests/install.yaml
+	# install eventbus
+	kubectl create namespace argo-events
+	kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/stable/examples/eventbus/native.yaml
 
 .PHONY: argocd_rollout_dashboard
 argocd_rollout_dashboard: k8s_connect
